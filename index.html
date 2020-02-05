@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        form {
+            width: min-content;
+            margin: 24px auto 0;
+        }
+        textarea{
+            resize: none;
+        }
+
+        input[type="text"] {
+            all: unset;
+            display: block;
+            border-bottom: 1px solid;
+            margin-bottom: 14px;
+            font-size: 24px;
+        }
+
+        button {
+            all: unset;
+            display: block;
+            padding: 12px;
+            border: 1px solid;
+            white-space: nowrap;
+            width: min-content;
+            margin: 24px auto 0;
+        }
+
+        ul {
+            display: flex;
+            align-items: flex-start;
+            margin-left: 0;
+            flex-wrap: wrap;
+            list-style: none;
+        }
+
+        .notes_item {
+            position: relative;
+            text-align: center;
+            border: 3px solid #CADFCF;
+            padding: 0.6em;
+            background: #FEFEFE;
+            color: #231F20;
+            font-family: "Trebuchet MS", "Lucida Sans";
+            width: 200px;
+            min-height: 200px;
+        }
+        .notes_item input{
+            max-width: 170px;
+        }
+        .buttons{
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+
+        .notes_item button {
+
+            all: unset;
+            background-color: wheat;
+        }
+
+        .completed {
+            text-decoration: line-through;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+
+<body>
+    <form>
+        <input type="text" placeholder="Title" name="title">
+        <textarea rows="10" cols="45" name="text"></textarea>
+        <button>Add note</button>
+
+
+
+
+
+    </form>
+    <div class="info">
+        <p class="sum">Всего заметок: <span class="sum_span"></span></p>
+        <p class="done">Выполнено: <span class="done_span"></span></p>
+    </div>
+    <ul class="notes"></ul>
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <script>
+        'use strict'
+        function toDoGenerator(form) {
+            this.form = form;
+            this.noteObject = {};
+            this.notes = localStorage.getItem('todo') ? JSON.parse(localStorage.getItem('todo')) : [];
+            this.formDataToObject = function (data) {
+                const obj = {};
+                data.forEach((value, key) => {
+                    if (key === 'completed') {
+                        obj[key] = 'false' ? false : true;
+                    } else {
+                        obj[key] = value;
+                    }
+
+                });
+                return obj
+            }
+            this.save = function () {
+                this.notesJson = JSON.stringify(this.notes);
+                localStorage.setItem('todo', this.notesJson);
+            }
+            this.createNotesArray = function () {
+                const date = new Date
+                this.formData = new FormData(this.form);
+                this.formData.append('id', moment(date).format('x'));
+                this.formData.append('completed', false);
+                this.formData.append('time', moment(date).format('MMMM Do YYYY, h:mm:ss a'));
+                this.noteObject = this.formDataToObject(this.formData);
+                this.notes.push(this.noteObject);
+                this.save();
+            }
+            this.setDone = function (id) {
+                this.notes.find(el => el.id === id)
+                    .completed = true;
+                this.save()
+            }
+            this.removeNote = function (id, confirm) {
+                if (confirm === true) {
+                    const index = this.notes.indexOf(this.notes.find(el => el.id === id));
+                    this.notes.splice(index, 1);
+                    this.save()
+                }
+            }
+            this.editNote = function (id, title, text, confirm) {
+                if (confirm) {
+                    const index = this.notes.indexOf(this.notes.find(el => el.id === id));
+                    this.notes[index].title = title;
+                    this.notes[index].text = text;
+                    this.save();
+                }
+                
+            }
+            this.getSum = function () {
+                return this.notes.length
+            } 
+            this.getDone = function () {
+                return this.notes.filter((el)=>el.completed === true).length
+            }
+            this.renderEditor = function (note, id) {
+                note.innerHTML =
+                    `<input type="text" name="title" value="${this.notes.find(el => el.id === id).title}">
+                    
+                    <textarea rows="5"  name="text"  >${this.notes.find(el => el.id === id).text}</textarea>
+                    <button type="button" class="note_save">Save</button>`
+
+
+            }
+            this.notesRender = function (container) {
+                container.innerHTML = '';
+                this.notes.forEach(function (note) {
+                    container.innerHTML +=
+                        `<li class="notes_item ${note.completed ? 'completed' : ''}" id = ${note.id}  > 
+                        <h4 class="note_title">${note.title}</h4>
+                        <p class="note_text">${note.text}</p>
+                        <div class="buttons">
+                            <button type="button" class="note_done" ${note.completed ? 'disabled' : ''} >Done</button>
+                            <button type="button" class="note_remove"  >Remove</button>
+                            <button type="button" class="note_edit"  ${note.completed ? 'disabled' : ''} >Edit</button>
+                        </div>
+                        
+                    </li>`
+                })
+            }
+
+        }
+
+        const form = document.querySelector('form');
+        const toDoList = new toDoGenerator(form);
+        const ul = document.querySelector('.notes');
+        const sum = document.querySelector('.sum_span');
+        const done = document.querySelector('.done_span');
+        sum.textContent = toDoList.getSum();
+        done.textContent = toDoList.getDone()
+        toDoList.notesRender(ul);
+        
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            toDoList.createNotesArray();
+            toDoList.notesRender(ul);
+            form.reset();
+            sum.textContent = toDoList.getSum();
+        });
+        ul.addEventListener('click', function (e) {
+            if (e.target.classList.contains('note_done')) {
+                toDoList.setDone(e.target.parentNode.parentNode.id);
+                toDoList.notesRender(ul);
+                done.textContent = toDoList.getDone();
+            }
+            if (e.target.classList.contains('note_remove')) {
+                toDoList.removeNote(e.target.parentNode.parentNode.id, confirm('Sure'));
+                toDoList.notesRender(ul);
+                done.textContent = toDoList.getDone();
+                sum.textContent = toDoList.getSum();
+            }
+            if (e.target.classList.contains('note_edit')) {
+                toDoList.renderEditor(e.target.parentNode.parentNode, e.target.parentNode.parentNode.id)
+
+            }
+            if (e.target.classList.contains('note_save')) {
+                const inputTitle = e.target.parentNode.querySelector('[name="title"]');
+                const inputText = e.target.parentNode.querySelector('[name="text"]')
+                toDoList.editNote(e.target.parentNode.id, inputTitle.value, inputText.value, confirm('Sure?'));
+                toDoList.notesRender(ul);
+            }
+        })
+
+
+
+
+    </script>
+</body>
+
+</html>
