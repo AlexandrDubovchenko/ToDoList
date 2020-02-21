@@ -79,21 +79,27 @@
 </head>
 
 <body>
-    <form>
-        <input type="text" placeholder="Title" name="title">
-        <textarea rows="10" cols="45" name="text"></textarea>
-        <button>Add note</button>
-
-
-
-
-
-    </form>
-    <div class="info">
-        <p class="sum">Всего заметок: <span class="sum_span"></span></p>
-        <p class="done">Выполнено: <span class="done_span"></span></p>
+    <div class="todo">
+        <form>
+            <input type="text" placeholder="Title" name="title">
+            <textarea rows="10" cols="45" name="text"></textarea>
+            <button>Add note</button>
+        </form>
+        <div class="info">
+            <p class="sum">Всего заметок: <span class="sum_span"></span></p>
+            <p class="done">Выполнено: <span class="done_span"></span></p>
+        </div>
+        <ul class="notes"></ul>
     </div>
-    <ul class="notes"></ul>
+    <div class="authorization">
+        <form>
+            <input type="email">
+            <input type="password">
+            <button>Log in</button>
+        </form>
+   
+    </div>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script src="index.js"></script>
 </body>
