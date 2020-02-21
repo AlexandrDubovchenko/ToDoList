@@ -75,12 +75,15 @@
             text-decoration: line-through;
             opacity: 0.5;
         }
+        .hidden{
+            display: none;
+        }
     </style>
 </head>
 
 <body>
-    <div class="todo">
-        <form>
+    <div class="todo hidden">
+        <form id="todo">
             <input type="text" placeholder="Title" name="title">
             <textarea rows="10" cols="45" name="text"></textarea>
             <button>Add note</button>
@@ -91,10 +94,10 @@
         </div>
         <ul class="notes"></ul>
     </div>
-    <div class="authorization">
-        <form>
-            <input type="email">
-            <input type="password">
+    <div class="login">
+        <form id="login">
+            <input type="email" name="email" required>
+            <input type="password" name="password" required>
             <button>Log in</button>
         </form>
    
