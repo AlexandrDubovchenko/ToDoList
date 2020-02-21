@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Hillel home work</title>
+</head>
+<body>
+    <style>
+        form {
+            width: min-content;
+            margin: 24px auto 0;
+        }
+
+        textarea {
+            resize: none;
+        }
+
+        input[type="text"] {
+            all: unset;
+            display: block;
+            border-bottom: 1px solid;
+            margin-bottom: 14px;
+            font-size: 24px;
+        }
+
+        button {
+            all: unset;
+            display: block;
+            padding: 12px;
+            border: 1px solid;
+            white-space: nowrap;
+            width: min-content;
+            margin: 24px auto 0;
+        }
+
+        ul {
+            display: flex;
+            align-items: flex-start;
+            margin-left: 0;
+            flex-wrap: wrap;
+            list-style: none;
+        }
+
+        .notes_item {
+            position: relative;
+            text-align: center;
+            border: 3px solid #CADFCF;
+            padding: 0.6em;
+            background: #FEFEFE;
+            color: #231F20;
+            font-family: "Trebuchet MS", "Lucida Sans";
+            width: 200px;
+            min-height: 200px;
+        }
+
+        .notes_item input {
+            max-width: 170px;
+        }
+
+        .buttons {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+
+        .notes_item button {
+
+            all: unset;
+            background-color: wheat;
+        }
+
+        .completed {
+            text-decoration: line-through;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+
+<body>
+    <form>
+        <input type="text" placeholder="Title" name="title">
+        <textarea rows="10" cols="45" name="text"></textarea>
+        <button>Add note</button>
+
+
+
+
+
+    </form>
+    <div class="info">
+        <p class="sum">Всего заметок: <span class="sum_span"></span></p>
+        <p class="done">Выполнено: <span class="done_span"></span></p>
+    </div>
+    <ul class="notes"></ul>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <script src="index.js"></script>
+</body>
+</html>
