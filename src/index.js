@@ -119,7 +119,7 @@ toDoGenerator.prototype.getSum = function () {
     return this.notes.length;
 };
 toDoGenerator.prototype.getDone = function () {
-    return this.notes.filter((el) => el.completed === true).length;
+    return this.notes.filter((el) => el.checked === true).length;
 };
 toDoGenerator.prototype.renderEditor = function (note, id) {
     this.valueEdit = JSON.parse(this.notes.find(el => el._id === +id).value);
@@ -147,13 +147,13 @@ toDoGenerator.prototype.notesRender = function (container) {
             const checked = note.checked;
             const value = JSON.parse(note.value);
             container.innerHTML += this.template(value, id, checked);
+            this.sum.textContent = this.getSum();
+            this.done.textContent = this.getDone();
         });
     });
 };
 toDoGenerator.prototype.init = function () {
     this.notesRender(this.list);
-    this.sum.textContent = this.getSum();
-    this.done.textContent = this.getDone();
     this.form.addEventListener('submit', e => {
         e.preventDefault();
         this.createNoteObject();
